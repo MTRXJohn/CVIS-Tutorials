@@ -99,11 +99,10 @@ plot([x;x(1)],[y;y(1)],'r','LineWidth',2) ; hold off ;
 
 %% Task 2: K-means
 
-im = rgb2lab(im2double(imread('apples.jpg')));
-K=3;
-points = [reshape(im, size(im,1)*size(im,2), 3), [1:273920]'/273920];
-
-[cluster_idx, cluster_center] = kmeans(points, K);
+im = im2double(imread('apples.jpg'));
+K=4;
+points = reshape(im, size(im,1)*size(im,2), 3);
+[cluster_idx, cluster_center] = kmeans(rgb2lab(points), K);
 
 pixel_labels = reshape(cluster_idx, size(im,1), size(im,2));
 figure;
