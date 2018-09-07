@@ -1,4 +1,7 @@
 %% Activity 1
+clear;
+clc;
+close all;
 %% DEMO 1
 % The first example shows how to use snakes to find the inner boundary of the
 % heart cavity in a magnetic resonance image 
@@ -99,9 +102,44 @@ plot([x;x(1)],[y;y(1)],'r','LineWidth',2) ; hold off ;
 
 %% Task 2: K-means
 
-im = rgb2lab(im2double(imread('apples.jpg')));
+im = rgb2lab(im2double(imread('bird.png')));
 K=3;
-points = [reshape(im, size(im,1)*size(im,2), 3), [1:273920]'/273920];
+c=zeros(size(im,1),size(im,2));
+[m,n,d] = size(im);
+array=zeros(m,n);
+
+for i=1:m
+    for j=1:n
+        array(i,j)=i*j/m*n/50000;
+    end
+end
+            
+
+imloc=[im(:,:,1), im(:,:,2), im(:,:,3), array(:,:)];
+
+points = [reshape(imloc, size(im,1)*size(im,2), 4)];
+
+[cluster_idx, cluster_center] = kmeans(points, K);
+
+pixel_labels = reshape(cluster_idx, size(im,1), size(im,2));
+figure;
+imagesc(pixel_labels);
+
+
+c = zeros(n*m,3);
+for i = 1:length(cluster_idx)
+ c(i,:) = hsv2rgb([cluster_idx(i)/K,1,1]);
+end
+
+figure;
+scatter3(points(:,1),points(:,2),points(:,3),ones(n*m, 1),c)
+%% %% Task 2: K-means
+
+im = rgb2lab(im2double(imread('bird.png')));
+K=3;
+%[m,n,d]=0;
+
+points = [reshape(im, size(im,1)*size(im,2), 3)];
 
 [cluster_idx, cluster_center] = kmeans(points, K);
 
