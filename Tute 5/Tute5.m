@@ -103,14 +103,14 @@ plot([x;x(1)],[y;y(1)],'r','LineWidth',2) ; hold off ;
 %% Task 2: K-means
 
 im = rgb2lab(im2double(imread('bird.png')));
-K=3;
+K=2;
 c=zeros(size(im,1),size(im,2));
 [m,n,d] = size(im);
 array=zeros(m,n);
 
 for i=1:m
     for j=1:n
-        array(i,j)=i*j/m*n/50000;
+        array(i,j)=pdist([m/2,n/2; i,j], 'euclidean')/8;
     end
 end
             
@@ -136,7 +136,7 @@ scatter3(points(:,1),points(:,2),points(:,3),ones(n*m, 1),c)
 %% %% Task 2: K-means
 
 im = rgb2lab(im2double(imread('bird.png')));
-K=3;
+K=2;
 %[m,n,d]=0;
 
 points = [reshape(im, size(im,1)*size(im,2), 3)];
@@ -155,3 +155,31 @@ end
 [m,n,d] = size(im);
 figure;
 scatter3(points(:,1),points(:,2),points(:,3),ones(n*m, 1),c)
+%% Task 3
+
+% MEANSHSEGM_DEMO Demo showing the usage of meanshsegm 
+% 
+% adapted from CMP Vision algorithms http://visionbook.felk.cvut.cz
+%
+% Example
+%
+% Mean shift segmentation is applied to an RGB color image. It is possible
+% to use a different color space or a grayscale image. Small regions can be
+% eliminated by post-processing.  
+
+image_path = ['8068.jpg'];
+img=imread(image_path);
+HR=30;
+HS=30;
+img=imresize(img,0.5) ; %resize or convert to grayscale if needed
+
+figure, imagesc(img); axis image ; axis off ; 
+
+display('Mean shift segmentation')
+display('this procedure may take several minutes...')
+
+l=meanshsegm(img,HR,HS) ;
+
+figure, imagesc(label2rgb(l-1,'jet','w','shuffle')) ; 
+axis image ; axis off ; 
+
